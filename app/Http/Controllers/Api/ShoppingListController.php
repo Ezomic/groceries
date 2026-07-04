@@ -42,16 +42,16 @@ class ShoppingListController extends Controller
     {
         $data = $request->validate([
             'product_id' => ['required', 'integer', 'exists:products,id'],
-            'quantity'   => ['nullable', 'numeric', 'min:0'],
-            'unit'       => ['nullable', 'string', 'max:50'],
-            'notes'      => ['nullable', 'string', 'max:255'],
+            'quantity' => ['nullable', 'numeric', 'min:0'],
+            'unit' => ['nullable', 'string', 'max:50'],
+            'notes' => ['nullable', 'string', 'max:255'],
         ]);
 
         $item = $request->user()->shoppingListItems()->create([
             'product_id' => $data['product_id'],
-            'quantity'   => $data['quantity'] ?? 1,
-            'unit'       => $data['unit'] ?? null,
-            'notes'      => $data['notes'] ?? null,
+            'quantity' => $data['quantity'] ?? 1,
+            'unit' => $data['unit'] ?? null,
+            'notes' => $data['notes'] ?? null,
             'sort_order' => $request->user()->shoppingListItems()->pending()->max('sort_order') + 1,
         ]);
 
@@ -63,9 +63,9 @@ class ShoppingListController extends Controller
         $this->authorize('update', $shoppingListItem);
 
         $data = $request->validate([
-            'quantity'   => ['nullable', 'numeric', 'min:0'],
-            'unit'       => ['nullable', 'string', 'max:50'],
-            'notes'      => ['nullable', 'string', 'max:255'],
+            'quantity' => ['nullable', 'numeric', 'min:0'],
+            'unit' => ['nullable', 'string', 'max:50'],
+            'notes' => ['nullable', 'string', 'max:255'],
             'sort_order' => ['nullable', 'integer'],
         ]);
 
