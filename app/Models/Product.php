@@ -18,11 +18,17 @@ class Product extends Model
         'quantity_unit',
     ];
 
+    /**
+     * @return HasMany<PantryItem, $this>
+     */
     public function pantryItems(): HasMany
     {
         return $this->hasMany(PantryItem::class);
     }
 
+    /**
+     * @return HasMany<ShoppingListItem, $this>
+     */
     public function shoppingListItems(): HasMany
     {
         return $this->hasMany(ShoppingListItem::class);

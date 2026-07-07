@@ -31,4 +31,4 @@ jobs:
       - name: Run tests (Pest)
         run: php artisan test
         env:
-          APP_KEY: base64:testtesttesttesttesttesttesttesttesttesttest=
+          APP_KEY: base64:UmnbLhyhKkLQNixpR23kSvypZH8teCuCP3Mi895dzMk=
