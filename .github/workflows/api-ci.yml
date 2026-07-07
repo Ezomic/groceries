@@ -20,19 +20,15 @@ jobs:
           coverage: none
 
       - name: Install Composer dependencies
-        working-directory: api
         run: composer install --no-interaction --prefer-dist --optimize-autoloader
 
       - name: Check code style (Pint)
-        working-directory: api
         run: ./vendor/bin/pint --test
 
       - name: Static analysis (PHPStan)
-        working-directory: api
         run: ./vendor/bin/phpstan analyse --memory-limit=512M --no-progress
 
       - name: Run tests (Pest)
-        working-directory: api
         run: php artisan test
         env:
           APP_KEY: base64:testtesttesttesttesttesttesttesttesttesttest=
