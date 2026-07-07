@@ -6,6 +6,7 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Models\PantryItem;
+use App\Models\Product;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
@@ -26,17 +27,17 @@ class PantryController extends Controller
     {
         $data = $request->validate([
             'product_id' => ['required', 'integer', 'exists:products,id'],
-            'quantity' => ['nullable', 'numeric', 'min:0'],
-            'unit' => ['nullable', 'string', 'max:50'],
-            'notes' => ['nullable', 'string', 'max:255'],
+            'quantity'   => ['nullable', 'numeric', 'min:0'],
+            'unit'       => ['nullable', 'string', 'max:50'],
+            'notes'      => ['nullable', 'string', 'max:255'],
         ]);
 
         $item = $request->user()->pantryItems()->updateOrCreate(
             ['product_id' => $data['product_id']],
             [
                 'quantity' => $data['quantity'] ?? 1,
-                'unit' => $data['unit'] ?? null,
-                'notes' => $data['notes'] ?? null,
+                'unit'     => $data['unit'] ?? null,
+                'notes'    => $data['notes'] ?? null,
             ]
         );
 
@@ -49,8 +50,8 @@ class PantryController extends Controller
 
         $data = $request->validate([
             'quantity' => ['nullable', 'numeric', 'min:0'],
-            'unit' => ['nullable', 'string', 'max:50'],
-            'notes' => ['nullable', 'string', 'max:255'],
+            'unit'     => ['nullable', 'string', 'max:50'],
+            'notes'    => ['nullable', 'string', 'max:255'],
         ]);
 
         $pantryItem->update($data);

@@ -46,11 +46,11 @@ class ProductController extends Controller
         $p = $data['product'];
 
         return Product::create([
-            'barcode' => $barcode,
-            'name' => $p['product_name'] ?? $p['product_name_nl'] ?? $p['product_name_en'] ?? 'Unknown',
-            'brand' => $p['brands'] ?? null,
-            'category' => $p['categories_tags'][0] ?? null,
-            'image_url' => $p['image_front_url'] ?? $p['image_url'] ?? null,
+            'barcode'       => $barcode,
+            'name'          => $p['product_name'] ?? $p['product_name_nl'] ?? $p['product_name_en'] ?? 'Unknown',
+            'brand'         => $p['brands'] ?? null,
+            'category'      => $p['categories_tags'][0] ?? null,
+            'image_url'     => $p['image_front_url'] ?? $p['image_url'] ?? null,
             'quantity_unit' => $p['quantity'] ?? null,
         ]);
     }
