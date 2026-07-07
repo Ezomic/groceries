@@ -114,3 +114,11 @@ Files in `deploy/`:
 - The `purchase-by-barcode` route must come before `{shoppingListItem}` in `routes/api.php` to avoid route binding treating `purchase-by-barcode` as an ID.
 - `clear-purchased` (DELETE) must also come before `{shoppingListItem}` for the same reason.
 - Open Food Facts can be slow (~2-3s); product lookup has a 5s timeout. Once a product is saved locally it's never re-fetched.
+
+## Linear
+
+Team: **THI** (Thijssen Software) — `3b1bf7b2-5ff4-4e70-9ca5-a1efb1280839`
+
+Branch format: `feature/thi-{number}-{description}` or `fix/thi-{number}-{description}`
+
+Follow the full workflow in `~/.claude/CLAUDE.md`. See parent context in `~/Projects/groceries/CLAUDE.md`.
