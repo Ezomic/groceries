@@ -22,7 +22,7 @@ class ShoppingListItem extends Model
     protected function casts(): array
     {
         return [
-            'quantity' => 'float',
+            'quantity'     => 'float',
             'purchased_at' => 'datetime',
         ];
     }
