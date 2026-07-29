@@ -15,16 +15,16 @@ class AuthController extends Controller
 {
     public function register(Request $request): JsonResponse
     {
-        $data = $request->validate([
+        $request->validate([
             'name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'email', 'unique:users'],
             'password' => ['required', 'string', 'min:8', 'confirmed'],
         ]);
 
         $user = User::create([
-            'name' => $data['name'],
-            'email' => $data['email'],
-            'password' => Hash::make($data['password']),
+            'name' => $request->string('name')->toString(),
+            'email' => $request->string('email')->toString(),
+            'password' => Hash::make($request->string('password')->toString()),
         ]);
 
         return response()->json([
@@ -35,14 +35,14 @@ class AuthController extends Controller
 
     public function login(Request $request): JsonResponse
     {
-        $data = $request->validate([
+        $request->validate([
             'email' => ['required', 'email'],
             'password' => ['required', 'string'],
         ]);
 
-        $user = User::where('email', $data['email'])->first();
+        $user = User::where('email', $request->string('email')->toString())->first();
 
-        if (! $user || ! Hash::check($data['password'], $user->password)) {
+        if (! $user || ! Hash::check($request->string('password')->toString(), $user->password)) {
             throw ValidationException::withMessages([
                 'email' => ['The provided credentials are incorrect.'],
             ]);
@@ -58,7 +58,10 @@ class AuthController extends Controller
 
     public function logout(Request $request): JsonResponse
     {
-        $request->user()->tokens()->where('name', 'mobile')->delete();
+        $user = $request->user();
+        abort_unless($user instanceof User, 401);
+
+        $user->tokens()->where('name', 'mobile')->delete();
 
         return response()->json(['message' => 'Logged out']);
     }
