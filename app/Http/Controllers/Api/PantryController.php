@@ -6,6 +6,7 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Models\PantryItem;
+use App\Models\User;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
@@ -13,7 +14,10 @@ class PantryController extends Controller
 {
     public function index(Request $request): JsonResponse
     {
-        $items = $request->user()
+        $user = $request->user();
+        abort_unless($user instanceof User, 401);
+
+        $items = $user
             ->pantryItems()
             ->with('product')
             ->orderBy('updated_at', 'desc')
@@ -24,19 +28,22 @@ class PantryController extends Controller
 
     public function store(Request $request): JsonResponse
     {
-        $data = $request->validate([
+        $request->validate([
             'product_id' => ['required', 'integer', 'exists:products,id'],
             'quantity' => ['nullable', 'numeric', 'min:0'],
             'unit' => ['nullable', 'string', 'max:50'],
             'notes' => ['nullable', 'string', 'max:255'],
         ]);
 
-        $item = $request->user()->pantryItems()->updateOrCreate(
-            ['product_id' => $data['product_id']],
+        $user = $request->user();
+        abort_unless($user instanceof User, 401);
+
+        $item = $user->pantryItems()->updateOrCreate(
+            ['product_id' => $request->integer('product_id')],
             [
-                'quantity' => $data['quantity'] ?? 1,
-                'unit' => $data['unit'] ?? null,
-                'notes' => $data['notes'] ?? null,
+                'quantity' => $request->filled('quantity') ? $request->float('quantity') : 1,
+                'unit' => $request->string('unit')->toString() ?: null,
+                'notes' => $request->string('notes')->toString() ?: null,
             ]
         );
 
@@ -47,13 +54,24 @@ class PantryController extends Controller
     {
         $this->authorize('update', $pantryItem);
 
-        $data = $request->validate([
+        $request->validate([
             'quantity' => ['nullable', 'numeric', 'min:0'],
             'unit' => ['nullable', 'string', 'max:50'],
             'notes' => ['nullable', 'string', 'max:255'],
         ]);
 
-        $pantryItem->update($data);
+        $attributes = [];
+        if ($request->has('quantity')) {
+            $attributes['quantity'] = $request->filled('quantity') ? $request->float('quantity') : null;
+        }
+        if ($request->has('unit')) {
+            $attributes['unit'] = $request->string('unit')->toString() ?: null;
+        }
+        if ($request->has('notes')) {
+            $attributes['notes'] = $request->string('notes')->toString() ?: null;
+        }
+
+        $pantryItem->update($attributes);
 
         return response()->json($pantryItem->load('product'));
     }

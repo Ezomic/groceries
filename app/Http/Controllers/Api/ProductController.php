@@ -39,17 +39,23 @@ class ProductController extends Controller
 
         $data = $response->json();
 
-        if (($data['status'] ?? 0) !== 1) {
+        if (! is_array($data) || ($data['status'] ?? 0) !== 1) {
             return null;
         }
 
-        $p = $data['product'];
+        $p = $data['product'] ?? null;
+
+        if (! is_array($p)) {
+            return null;
+        }
+
+        $categories = $p['categories_tags'] ?? null;
 
         return Product::create([
             'barcode' => $barcode,
             'name' => $p['product_name'] ?? $p['product_name_nl'] ?? $p['product_name_en'] ?? 'Unknown',
             'brand' => $p['brands'] ?? null,
-            'category' => $p['categories_tags'][0] ?? null,
+            'category' => is_array($categories) ? ($categories[0] ?? null) : null,
             'image_url' => $p['image_front_url'] ?? $p['image_url'] ?? null,
             'quantity_unit' => $p['quantity'] ?? null,
         ]);
