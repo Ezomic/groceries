@@ -2,6 +2,7 @@
 
 declare(strict_types=1);
 
+use App\Http\Controllers\Api\ApiTokenController;
 use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\PantryController;
 use App\Http\Controllers\Api\ProductController;
@@ -13,6 +14,10 @@ Route::post('login', [AuthController::class, 'login']);
 
 Route::middleware('auth:sanctum')->group(function (): void {
     Route::post('logout', [AuthController::class, 'logout']);
+
+    Route::get('tokens', [ApiTokenController::class, 'index']);
+    Route::post('tokens', [ApiTokenController::class, 'store']);
+    Route::delete('tokens/{token}', [ApiTokenController::class, 'destroy']);
 
     Route::get('products/lookup/{barcode}', [ProductController::class, 'lookup']);
 
