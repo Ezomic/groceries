@@ -34,6 +34,7 @@ php artisan test             # Pest suite
 | Controller | Responsibility |
 |-----------|---------------|
 | `AuthController` | Register, login, logout (token-per-device named `mobile`) |
+| `ApiTokenController` | List, create and revoke the user's own personal access tokens; plaintext is returned once on create |
 | `ProductController` | `GET /products/lookup/{barcode}` — hits DB first, falls back to Open Food Facts and saves result |
 | `PantryController` | CRUD for the user's pantry; `store` uses `updateOrCreate` so scanning the same item twice increments rather than errors |
 | `ShoppingListController` | Shopping list CRUD, mark purchased by ID or barcode, purchase history, clear purchased |
@@ -57,6 +58,18 @@ POST /api/logout     (Bearer token)
 ```
 
 Response includes `{ token, user }`.
+
+### API tokens
+
+```
+GET    /api/tokens                (Bearer token)
+POST   /api/tokens                { name }
+DELETE /api/tokens/{id}
+```
+
+`POST` returns `{ id, name, token }`; the plaintext `token` is shown only in that response and
+cannot be retrieved again. Names are unique per user, so a token cannot shadow the `mobile` one
+that login recycles. Listing and revoking are scoped to the acting user.
 
 ### Products
 
